@@ -10,6 +10,9 @@ public class Player : MonoBehaviour
     public GameObject bombPrefab;
     public Transform bombsTransform;
     public Vector3 velocity;
+    public float maxSpeed = 1f;
+    public float accelerationTime;
+
 
     void Update()
     {
@@ -19,9 +22,11 @@ public class Player : MonoBehaviour
 
     public void PlayerMovement()
     {
+
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.position = transform.position + (velocity = new Vector3(-0.01f, 0f));
+            accelerationTime += Time.deltaTime;
+            transform.position += transform.position + (velocity = new Vector3(maxSpeed - 0.01f/accelerationTime, 0f));
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
