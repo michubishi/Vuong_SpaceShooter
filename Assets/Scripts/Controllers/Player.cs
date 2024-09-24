@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -17,7 +15,6 @@ public class Player : MonoBehaviour
     void Update()
     {
         PlayerMovement();
-
     }
 
     public void PlayerMovement()
@@ -25,8 +22,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            accelerationTime += Time.deltaTime;
-            transform.position += transform.position + (velocity = new Vector3(maxSpeed - 0.01f/accelerationTime, 0f));
+            transform.position = transform.position + (velocity = new Vector3(-0.01f, 0f));
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
