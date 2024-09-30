@@ -44,4 +44,6 @@ public class Asteroid : MonoBehaviour
 
         firstPosition = transform.position;
     }
+
+    
 }
