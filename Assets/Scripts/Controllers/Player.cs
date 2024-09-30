@@ -10,13 +10,14 @@ public class Player : MonoBehaviour
     public Vector3 velocity;
     public float maxSpeed = 1f;
     public float accelerationTime;
-    
+    public List<float> points = new List<float>();
+
 
 
     void Update()
     {
         PlayerMovement();
-        EnemyRadar(1, 8);
+        EnemyRadar(1, 6);
     }
 
     public void PlayerMovement()
@@ -47,14 +48,11 @@ public class Player : MonoBehaviour
     {
         int angle = 360 / circlePoints;
 
-        List<float> points = new List<float>();
-
         for (int i = 0; i < circlePoints; i++) 
         {
-            Vector3 point = new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius);
-            Vector3 startPoint = new Vector3(transform.position.x, transform.position.y + radius);
-            Debug.DrawLine(startPoint, point, Color.red);
-            angle = circlePoints + circlePoints;
+            Vector3 point = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle)) * radius * Mathf.Rad2Deg;
+            Debug.DrawLine(transform.position, point, Color.red);
+            angle = angle + angle;
         }
     }
 }
