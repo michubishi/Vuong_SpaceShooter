@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O))
         {
-            SpawnPowerUps(1, 5);
+            SpawnPowerUps(1, 6);
         }
     }
 
