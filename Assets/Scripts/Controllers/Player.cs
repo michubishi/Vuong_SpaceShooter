@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -6,83 +7,61 @@ public class Player : MonoBehaviour
     public List<Transform> asteroidTransforms;
     public Transform enemyTransform;
     public GameObject bombPrefab;
-    public GameObject powerupPrefab;
     public Transform bombsTransform;
-    public Vector3 velocity;
-    public float maxSpeed = 1f;
-    public float accelerationTime;
-    public List<float> points = new List<float>();
-    public List<float> bombPoints = new List<float>();
 
+    public float accelerationTime = 1f;
+    public float decelerationTime = 1f;
+    public float maxSpeed = 7.5f;
+    public float turnSpeed = 180f;
 
+    private float acceleration;
+    private float deceleration;
+    private Vector3 currentVelocity;
+    private float maxSpeedSqr;
+
+    private void Start()
+    {
+        acceleration = maxSpeed / accelerationTime;
+        deceleration = maxSpeed / decelerationTime;
+        maxSpeedSqr = maxSpeed * maxSpeed;
+    }
 
     void Update()
     {
-        PlayerMovement();
-        EnemyRadar(1, 6);
+        Vector3 moveDirection = Vector3.zero;
 
-        if (Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKey(KeyCode.W))
+            moveDirection += Vector3.up;
+        if (Input.GetKey(KeyCode.S))
+            moveDirection += Vector3.down;
+        
+        if (Input.GetKey(KeyCode.D))
+            moveDirection += Vector3.right;
+        if (Input.GetKey(KeyCode.A))
+            moveDirection += Vector3.left;
+
+        if (moveDirection.sqrMagnitude > 0)
         {
-            SpawnPowerUps(1, 6);
+            currentVelocity += Time.deltaTime * acceleration * moveDirection;
+            if (currentVelocity.sqrMagnitude > maxSpeedSqr)
+            {
+                currentVelocity = currentVelocity.normalized * maxSpeed;
+            }
         }
+        else
+        {
+            Vector3 velocityDelta = Time.deltaTime * deceleration * currentVelocity.normalized;
+            if (velocityDelta.sqrMagnitude > currentVelocity.sqrMagnitude)
+            {
+                currentVelocity = Vector3.zero;
+            }
+            else
+            {
+                currentVelocity -= velocityDelta;
+            }
+        }
+
+        transform.position += currentVelocity * Time.deltaTime;
     }
 
-    public void PlayerMovement()
-    {
-
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            transform.position = transform.position + (velocity = new Vector3(-0.01f, 0f));
-        }
-
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            transform.position = transform.position + (velocity = new Vector3(0.01f, 0f));
-        }
-
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            transform.position = transform.position + (velocity = new Vector3(0f, 0.01f));
-        }
-
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            transform.position = transform.position + (velocity = new Vector3(0f, -0.01f));
-;       }
-
-        if (Input.GetKey(KeyCode.P))
-        {
-
-        }
-    }
-
-    public void EnemyRadar(float radius, int circlePoints)
-    {
-        int angle = 360/circlePoints;
-
-        for (int i = 0; i <= circlePoints; i++) 
-        {
-            float radian = Mathf.Rad2Deg * angle;
-
-            Vector3 point = new Vector3(Mathf.Cos(radian), Mathf.Sin(radian)) * radius;
-            Debug.DrawLine(transform.position, transform.position + point, Color.red);
-
-            angle = angle + circlePoints*10;
-        }
-    }
-
-    public void SpawnPowerUps(float radius, int numberOfPowerUps)
-    {
-        int angle = 360 / numberOfPowerUps;
-
-        for (int i = 0; i <= numberOfPowerUps; i++)
-        {
-            float radian = Mathf.Rad2Deg * angle;
-
-            Vector3 powerUpPoint = new Vector3(Mathf.Cos(radian), Mathf.Sin(radian)) * radius;
-            Instantiate(powerupPrefab, transform.position + powerUpPoint, powerupPrefab.transform.rotation);
-
-            angle = angle + numberOfPowerUps * 10;
-        }
-    }
 }

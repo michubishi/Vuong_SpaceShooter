@@ -17,9 +17,4 @@ public class Moon : MonoBehaviour
     {
 
     }
-
-    public void OrbtialMotion(float radius, float speed, Transform target)
-    {
-
-    }
 }
